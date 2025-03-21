@@ -1,6 +1,7 @@
-## Limpa Terminal:
 import os
+import time
 
+# Limpar terminal
 def limpar_terminal():
     sistema = os.name
     if sistema == 'nt':
@@ -8,38 +9,106 @@ def limpar_terminal():
     else:
         os.system('clear')
 
-## Menu Inicial:
-def menu_inicial():
+# Usuarios
+usuarios = {}
+
+# Login
+def login():
+    limpar_terminal()
+    print("Sistema de Login")
+    usuario = input("Digite o nome de usuário: ")
+    senha = input("Digite a senha: ")
+
+    if usuario in usuarios and usuarios[usuario] == senha:
+        print(f"Bem-vindo, {usuario}!\nRedirecionando para o menu inicial, aguarde...")
+        time.sleep(2)
+        menu_inicial(usuario)
+        return True
+    else:
+        print("Usuário ou senha incorretos. Tente novamente.")
+        time.sleep(2)
+        return False
+
+# Registro
+def registrar():
+    limpar_terminal()
+    print("Sistema de Registro")
+    usuario = input("Digite um nome de usuário: ")
+    if usuario in usuarios:
+        print("Usuário já existe. Tente outro nome.")
+        time.sleep(2)
+        return False
+    
+    senha = input("Digite uma senha: ")
+    senha_confirmada = input("Confirme sua senha: ")
+    
+    if senha != senha_confirmada:
+        print("As senhas não coincidem. Tente novamente.")
+        time.sleep(2)
+        return False
+    
+    usuarios[usuario] = senha
+    print(f"Usuário {usuario} registrado com sucesso!")
+    time.sleep(2)
+    return True
+
+# Painel Login e Registro
+def loginregistro():
     while True:
         limpar_terminal()
-        inicial = int(input("Selecione a opção abaixo:\n1 - Office\n2 - Aulas\n3 - Sair\n"))
+        print("Selecione a opção abaixo:")
+        print("[1] - Login")
+        print("[2] - Registrar")
+        print("[3] - Voltar")
+        
+        try:
+            opcao = int(input("Digite sua escolha: "))
+            if opcao == 1:
+                if login():
+                    break
+            elif opcao == 2:
+                if registrar():
+                    print("Você pode agora fazer login.")
+            elif opcao == 3:
+                break
+            else:
+                print("Opção inválida. Tente novamente.")
+        except ValueError:
+            print("Por favor, insira um número válido.")
+
+# Menu inicial
+def menu_inicial(usuario):
+    while True:
+        limpar_terminal()
+        inicial = int(input(f"Olá {usuario}, Selecione a opção abaixo:\n[1] - Office\n[2] - Aulas\n[3] - Sair\n"))
         
         if inicial == 1:
             office()
         elif inicial == 2:
             aulas()
         elif inicial == 3:
-            print("\n2 Saindo... Até mais!")
+            limpar_terminal()
+            print("\nSaindo... Até mais!")
             break
         else:
             print("Opção inválida. Tente novamente.")
 
-## Office:
+# Office
 def office():
     while True:
         limpar_terminal()
         office = int(input("Para voltar ao menu inicial digite 2: "))
-        if office== 2:
+        if office == 2:
             print("Voltando ao menu inicial...")
             break
         else:
             print("Opção inválida. Tente novamente.")
 
-## Aulas:
+# Aulas
 def aulas():
     while True:
         limpar_terminal()
-        aulas = int(input("Selecione uma opção de Aulas:\n1 - Aulas de Python\n2 - Aulas de Matemática\n3 - Voltar ao menu inicial\n"))
+        aulas = int(input("Selecione uma opção de Aulas:\n[1] - 🐍 Aulas de Python\n[2] - ➗ Aulas de Matemática\n[3] - 🏠 Voltar ao menu inicial\n"))
         if aulas == 1:
             print("Você escolheu Aulas de Python.")
         elif aulas == 2:
@@ -50,5 +119,5 @@ def aulas():
         else:
             print("Opção inválida. Tente novamente.")
 
-# Inicia:
-menu_inicial()
+# Inicia o sistema
+loginregistro()
